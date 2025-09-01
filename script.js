@@ -1,10 +1,34 @@
 //gameBoard
 const gameBoardModule = (function (){
+    //Creacion de gameBoardField en array doble
     let fila1 = [1,2,2]
-    let fila2 = [1,2,6]
+    let fila2 = [0,2,6]
     let fila3 = [1,5,2]
 
     let gameBoardField = [fila1, fila2, fila3];
+
+    //Creacion de Players para mantener puntuación
+    player1Score = 0;
+    player2Score = 0;
+
+    //Suma de Score
+    function player1Winner() {
+        player1Score = ++player1Score;
+    }
+
+    function player2Winner() {
+        player2Score = ++player2Score;
+    }
+
+    //Obtener Score
+    function player1GetScore() {
+        console.log(player1Score);
+    }
+
+    function player2GetScore() {
+        console.log(player2Score);
+    }
+
 
     //Función que verifica el ganador en el tablero
     function win() {
@@ -31,7 +55,7 @@ const gameBoardModule = (function (){
         }
     }
 
-    return {win};
+    return {win, player1Winner, player2Winner, player1GetScore
+        ,player2GetScore};
 })();
 
-gameBoardModule.win();
