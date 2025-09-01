@@ -1,7 +1,7 @@
 //gameBoard
 const gameBoardModule = (function (){
     //Creacion de gameBoardField en matriz
-    let fila1 = [1,2,2]
+    let fila1 = [0,2,2]
     let fila2 = [0,2,6]
     let fila3 = [1,5,2]
 
@@ -32,7 +32,12 @@ const gameBoardModule = (function (){
 
     //Llenado de matriz
     function llenadoMatriz(CoorY, CoorX, valor) {
-        gameBoardField[CoorY][CoorX] = valor;
+        if (gameBoardField[CoorY][CoorX] == undefined){
+            gameBoardField[CoorY][CoorX] = valor;
+        }
+        else {
+            console.log("Este lugar está ocupado")
+        }
     }
 
 
@@ -65,6 +70,4 @@ const gameBoardModule = (function (){
         ,player2GetScore, llenadoMatriz};
 })();
 
-gameBoardModule.llenadoMatriz(0,1,1);
-gameBoardModule.llenadoMatriz(0,2,1);
-gameBoardModule.win();
+
