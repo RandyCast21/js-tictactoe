@@ -1,6 +1,6 @@
 //gameBoard
 const gameBoardModule = (function (){
-    //Creacion de gameBoardField en array doble
+    //Creacion de gameBoardField en matriz
     let fila1 = [1,2,2]
     let fila2 = [0,2,6]
     let fila3 = [1,5,2]
@@ -30,6 +30,12 @@ const gameBoardModule = (function (){
     }
 
 
+    //Llenado de matriz
+    function llenadoMatriz(CoorY, CoorX, valor) {
+        gameBoardField[CoorY][CoorX] = valor;
+    }
+
+
     //Función que verifica el ganador en el tablero
     function win() {
         //Victoria diagonal X2Y2, X1Y1, X3Y3
@@ -56,6 +62,9 @@ const gameBoardModule = (function (){
     }
 
     return {win, player1Winner, player2Winner, player1GetScore
-        ,player2GetScore};
+        ,player2GetScore, llenadoMatriz};
 })();
 
+gameBoardModule.llenadoMatriz(0,1,1);
+gameBoardModule.llenadoMatriz(0,2,1);
+gameBoardModule.win();
