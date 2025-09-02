@@ -148,3 +148,13 @@ const gameBoardModule = (function (){
 
 
 //gameBoardModule.revisarTablero();
+
+let gameBoardFieldDiv = document.querySelector(".gameBoardContainer");
+
+gameBoardFieldDiv.addEventListener("click", (e) => {
+    if(e.target.className == "gameBoardPanel") {
+        console.log(e.target.dataset.y)
+        console.log(e.target.dataset.x)
+    }
+});
+

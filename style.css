@@ -35,13 +35,12 @@
     grid-template-rows: repeat(3, 33%);
     justify-items: center;
     align-items: center;
-    border: 2px solid black;
     box-sizing: content-box;
     margin-top: 5vh;
 }
 
 .gameBoardPanel {
-    border: 1px solid black;
+    border: 2px solid black;
     display: flex;
     box-sizing: content-box;
     justify-content: center;
