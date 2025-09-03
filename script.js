@@ -10,15 +10,15 @@ const gameBoardModule = (function (){
     //Mecánica de Juego
     let valorAccion = "X"
 
-    function mecanicaJuego(CoorY, CoorX) {
-        if(player1Activo == true){
-            valorAccion = "X"
-        } else {
-            valorAccion = "O"
-        }
-        llenadoMatriz(CoorY, CoorX, valorAccion);
+    function mecanicaJuego() {
+        limpiarTablero();
+        fieldModule.actualizarTurno(valorPlayer1Activo());
+        valorCambioTurno();
+        //llenadoMatriz(CoorY, CoorX, valorAccion);
+        fieldModule.gameBoardPanelEvento(valorAccion);
         conteOport = conteOport - 1;
         win(player1Activo);
+        fieldModule.actualizarPuntajes(player1GetScore(), player2GetScore());
         cambioTurno();
         if (conteEmpate == 1 || conteWin == 1){
             limpiarTablero();
@@ -33,18 +33,31 @@ const gameBoardModule = (function (){
 
     function cambioTurno () {
         player1Activo = !player1Activo;
+        console.log("funciona")
     }
 
     //Valor en Cambio de turno
-    let valorPlayer1Activo = "X";
+    //let valorPlayer1Activo = "X";
     
     function valorCambioTurno() {
     if(player1Activo == true){
             valorAccion = "X"
+            console.log("funciona, soy X cambio")
         } else {
             valorAccion = "O"
+            console.log("funciona, soy O cambio")
         }
     }
+
+    //Valor sobre Jugador Activo
+    function valorPlayer1Activo() {
+        if(player1Activo == true){
+            return "Player 1"
+        } else {
+            return "Player 2"
+        }
+    }
+
 
     //Llenado de matriz
     function llenadoMatriz(CoorY, CoorX, valor) {
@@ -75,16 +88,16 @@ const gameBoardModule = (function (){
     //Anuncio de jugador ganador 
     function whoIsWinner(jugador) {
         conteWin = 1;
-        if(player1Activo == true) {
+        if(jugador == true) {
             console.log("Gana jugador 1")
             player1Winner();
-            alert("Gana Jugador 1");
-            return;
+            //alert("Gana Jugador 1");
+            //return;
         } else {
             console.log("Gana jugador 2")
             player2Winner();
-            alert("Gana Jugador 2");
-            return;
+            //alert("Gana Jugador 2");
+            //return;
         }
     }
 
@@ -138,11 +151,11 @@ const gameBoardModule = (function (){
 
     //Obtener Score
     function player1GetScore() {
-        console.log(player1Score);
+        return player1Score;
     }
 
     function player2GetScore() {
-        console.log(player2Score);
+        return player2Score;
     }
 
     //Revisar tablero
@@ -156,11 +169,11 @@ const gameBoardModule = (function (){
 
     return {win, player1Winner, player2Winner, player1GetScore, 
         player2GetScore, llenadoMatriz, mecanicaJuego, cambioTurno, 
-    limpiarTablero, revisarTablero, valorCambioTurno};
+    limpiarTablero, revisarTablero, valorCambioTurno, valorAccion};
 })();
 
 
-//gameBoardModule.revisarTablero();
+gameBoardModule.revisarTablero();
 
 const fieldModule = (function () {
 
@@ -169,21 +182,22 @@ const fieldModule = (function () {
     let gameBoardFieldDivChild = document.querySelectorAll(".gameBoardPanel")
     //console.log(gameBoardFieldDivChild)
 
-    function gameBoardPanelEvento() {
-    gameBoardFieldDiv.addEventListener("click", (e) => {
-    if(e.target.className == "gameBoardPanel") {
-        //console.log(e.target.dataset.y)
-        //console.log(e.target.dataset.x)
-        console.log(e.target.dataset.number)
-        actualizarField(e.target.dataset.number, "X")
-    }
-    });
-    }
-
     function actualizarField(numberField, valorAccion) {
     let nodoField = Array.from(gameBoardFieldDivChild).find(e => (e.dataset.number == numberField));
     nodoField.textContent = valorAccion
     nodoField.style.fontSize = "200%"
+    }
+
+    function gameBoardPanelEvento(valorAccion) {
+        gameBoardFieldDiv.addEventListener("click", (e) => {
+            if(e.target.className == "gameBoardPanel") {
+                //console.log(e.target.dataset.y)
+                //console.log(e.target.dataset.x)
+                console.log(e.target.dataset.number)
+                actualizarField(e.target.dataset.number, valorAccion)
+                gameBoardModule.llenadoMatriz(e.target.dataset.y, e.target.dataset.x, valorAccion)
+            }
+        });
     }
 
     //Actualizar contadores superiores
@@ -191,19 +205,23 @@ const fieldModule = (function () {
     let playeTurnDiv = document.querySelector("#playerTurnDiv");
     let player2ScoreDiv = document.querySelector("#player2ScoreDiv");
 
-
-
-    function actualizarContadores(contadorPlayer1, contadorPlayer2, turnoAviso) {
+    function actualizarPuntajes(contadorPlayer1, contadorPlayer2) {
         player1ScoreDiv.textContent = contadorPlayer1;
         player2ScoreDiv.textContent = contadorPlayer2;
+    }
+
+    function actualizarTurno(turnoAviso) {
         playeTurnDiv.textContent = turnoAviso;
     }
 
 
-
-    return {gameBoardPanelEvento, };
+    return {gameBoardPanelEvento, actualizarTurno, actualizarPuntajes};
 })();
 
+
+//gameBoardModule.mecanicaJuego();
+
+//gameBoardModule.mecanicaJuegoEvento();
 
 
 /*
