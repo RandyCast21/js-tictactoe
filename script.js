@@ -153,8 +153,37 @@ let gameBoardFieldDiv = document.querySelector(".gameBoardContainer");
 
 gameBoardFieldDiv.addEventListener("click", (e) => {
     if(e.target.className == "gameBoardPanel") {
-        console.log(e.target.dataset.y)
-        console.log(e.target.dataset.x)
+        //console.log(e.target.dataset.y)
+        //console.log(e.target.dataset.x)
+        console.log(e.target.dataset.number)
+        actualizarField(e.target.dataset.number)
     }
 });
+
+//Actualizar el tablero
+let gameBoardFieldDivChild = document.querySelectorAll(".gameBoardPanel")
+console.log(gameBoardFieldDivChild)
+
+
+function actualizarField(numberField) {
+    let nodoField = Array.from(gameBoardFieldDivChild).find(e => (e.dataset.number == numberField));
+    nodoField.textContent = "Cambio"
+    nodoField.style.fontSize = "200%"
+}
+
+//Actualizar contadores superiores
+let player1ScoreDiv = document.querySelector("#player1ScoreDiv");
+let playeTurnDiv = document.querySelector("#playerTurnDiv");
+let player2ScoreDiv = document.querySelector("#player2ScoreDiv");
+
+
+
+function actualizarContadores(contadorPlayer1, contadorPlayer2, turnoAviso) {
+    player1ScoreDiv.textContent = contadorPlayer1;
+    player2ScoreDiv.textContent = contadorPlayer2;
+    playeTurnDiv.textContent = turnoAviso;
+}
+
+
+
 
