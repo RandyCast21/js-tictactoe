@@ -35,6 +35,17 @@ const gameBoardModule = (function (){
         player1Activo = !player1Activo;
     }
 
+    //Valor en Cambio de turno
+    let valorPlayer1Activo = "X";
+    
+    function valorCambioTurno() {
+    if(player1Activo == true){
+            valorAccion = "X"
+        } else {
+            valorAccion = "O"
+        }
+    }
+
     //Llenado de matriz
     function llenadoMatriz(CoorY, CoorX, valor) {
         if (gameBoardField[CoorY][CoorX] > 0){
@@ -67,10 +78,12 @@ const gameBoardModule = (function (){
         if(player1Activo == true) {
             console.log("Gana jugador 1")
             player1Winner();
+            alert("Gana Jugador 1");
             return;
         } else {
             console.log("Gana jugador 2")
             player2Winner();
+            alert("Gana Jugador 2");
             return;
         }
     }
@@ -88,7 +101,7 @@ const gameBoardModule = (function (){
             console.log("win diagonal derecha superior")
             whoIsWinner(player1Activo);
         }
-
+        
         for (i = 0; i < 3; i++){
             //Victoria por 3 horizontal
             if(gameBoardField[i][0] == gameBoardField[i][1] && gameBoardField[i][1] == gameBoardField[i][2]) {
@@ -143,46 +156,79 @@ const gameBoardModule = (function (){
 
     return {win, player1Winner, player2Winner, player1GetScore, 
         player2GetScore, llenadoMatriz, mecanicaJuego, cambioTurno, 
-    limpiarTablero, revisarTablero};
+    limpiarTablero, revisarTablero, valorCambioTurno};
 })();
 
 
 //gameBoardModule.revisarTablero();
 
-let gameBoardFieldDiv = document.querySelector(".gameBoardContainer");
+const fieldModule = (function () {
 
-gameBoardFieldDiv.addEventListener("click", (e) => {
+    //Actualizar el tablero
+    let gameBoardFieldDiv = document.querySelector(".gameBoardContainer");
+    let gameBoardFieldDivChild = document.querySelectorAll(".gameBoardPanel")
+    //console.log(gameBoardFieldDivChild)
+
+    function gameBoardPanelEvento() {
+    gameBoardFieldDiv.addEventListener("click", (e) => {
     if(e.target.className == "gameBoardPanel") {
         //console.log(e.target.dataset.y)
         //console.log(e.target.dataset.x)
         console.log(e.target.dataset.number)
-        actualizarField(e.target.dataset.number)
+        actualizarField(e.target.dataset.number, "X")
     }
-});
+    });
+    }
 
-//Actualizar el tablero
-let gameBoardFieldDivChild = document.querySelectorAll(".gameBoardPanel")
-console.log(gameBoardFieldDivChild)
-
-
-function actualizarField(numberField) {
+    function actualizarField(numberField, valorAccion) {
     let nodoField = Array.from(gameBoardFieldDivChild).find(e => (e.dataset.number == numberField));
-    nodoField.textContent = "Cambio"
+    nodoField.textContent = valorAccion
     nodoField.style.fontSize = "200%"
-}
+    }
 
-//Actualizar contadores superiores
-let player1ScoreDiv = document.querySelector("#player1ScoreDiv");
-let playeTurnDiv = document.querySelector("#playerTurnDiv");
-let player2ScoreDiv = document.querySelector("#player2ScoreDiv");
+    //Actualizar contadores superiores
+    let player1ScoreDiv = document.querySelector("#player1ScoreDiv");
+    let playeTurnDiv = document.querySelector("#playerTurnDiv");
+    let player2ScoreDiv = document.querySelector("#player2ScoreDiv");
 
 
 
-function actualizarContadores(contadorPlayer1, contadorPlayer2, turnoAviso) {
-    player1ScoreDiv.textContent = contadorPlayer1;
-    player2ScoreDiv.textContent = contadorPlayer2;
-    playeTurnDiv.textContent = turnoAviso;
-}
+    function actualizarContadores(contadorPlayer1, contadorPlayer2, turnoAviso) {
+        player1ScoreDiv.textContent = contadorPlayer1;
+        player2ScoreDiv.textContent = contadorPlayer2;
+        playeTurnDiv.textContent = turnoAviso;
+    }
+
+
+
+    return {gameBoardPanelEvento, };
+})();
+
+
+
+/*
+
+function prueba() {
+    gameBoardFieldDiv.addEventListener("click", (e) => {
+    if(e.target.className == "gameBoardPanel") {
+        //console.log(e.target.dataset.y)
+        //console.log(e.target.dataset.x)
+        console.log(e.target.dataset.number)
+        actualizarField(e.target.dataset.number, "X")
+    }
+    });
+    }
+*/
+
+
+
+
+
+
+
+
+
+
 
 
 
