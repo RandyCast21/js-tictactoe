@@ -19,21 +19,27 @@ const gameBoardModule = (function (){
         conteOport = conteOport - 1;
         win(player1Activo);
         fieldModule.actualizarPuntajes(player1GetScore(), player2GetScore());
-        cambioTurno();
+        cambioTurno();player1Activo = true;
+        reinicio();
+    }
+
+    //Reiniciar el juego?
+    function reinicio() {
         if (conteEmpate == 1 || conteWin == 1){
             limpiarTablero();
             conteEmpate = 0;
             conteWin = 0;
+            player1Activo = true;
+            fieldModule.reiniciarField();
         }
     }
-
 
     //Cambio de turno
     let player1Activo = true
 
     function cambioTurno () {
         player1Activo = !player1Activo;
-        console.log("funciona")
+        console.log(player1Activo)
     }
 
     //Valor en Cambio de turno
@@ -42,11 +48,12 @@ const gameBoardModule = (function (){
     function valorCambioTurno() {
     if(player1Activo == true){
             valorAccion = "X"
-            console.log("funciona, soy X cambio")
+            console.log("Soy " + valorAccion)
         } else {
             valorAccion = "O"
-            console.log("funciona, soy O cambio")
+            console.log("Soy " + valorAccion)
         }
+        return valorAccion;
     }
 
     //Valor sobre Jugador Activo
@@ -91,12 +98,12 @@ const gameBoardModule = (function (){
         if(jugador == true) {
             console.log("Gana jugador 1")
             player1Winner();
-            //alert("Gana Jugador 1");
+            alert("Gana Jugador 1");
             //return;
         } else {
             console.log("Gana jugador 2")
             player2Winner();
-            //alert("Gana Jugador 2");
+            alert("Gana Jugador 2");
             //return;
         }
     }
@@ -133,6 +140,7 @@ const gameBoardModule = (function (){
         if (conteWin == 0 && conteOport == 0){
             conteEmpate = 1;
             console.log("Empate")
+            alert("Empate")
         }
     }
 
@@ -169,7 +177,8 @@ const gameBoardModule = (function (){
 
     return {win, player1Winner, player2Winner, player1GetScore, 
         player2GetScore, llenadoMatriz, mecanicaJuego, cambioTurno, 
-    limpiarTablero, revisarTablero, valorCambioTurno, valorAccion};
+    limpiarTablero, revisarTablero, valorCambioTurno, valorAccion, 
+    conteOport, player1Activo, reinicio, valorPlayer1Activo};
 })();
 
 
@@ -183,22 +192,29 @@ const fieldModule = (function () {
     //console.log(gameBoardFieldDivChild)
 
     function actualizarField(numberField, valorAccion) {
-    let nodoField = Array.from(gameBoardFieldDivChild).find(e => (e.dataset.number == numberField));
-    nodoField.textContent = valorAccion
-    nodoField.style.fontSize = "200%"
+        let nodoField = Array.from(gameBoardFieldDivChild).find(e => (e.dataset.number == numberField));
+        nodoField.textContent = valorAccion
+        nodoField.style.fontSize = "200%"
     }
 
-    function gameBoardPanelEvento(valorAccion) {
+    function gameBoardPanelEvento() {
         gameBoardFieldDiv.addEventListener("click", (e) => {
             if(e.target.className == "gameBoardPanel") {
-                //console.log(e.target.dataset.y)
-                //console.log(e.target.dataset.x)
-                console.log(e.target.dataset.number)
-                actualizarField(e.target.dataset.number, valorAccion)
-                gameBoardModule.llenadoMatriz(e.target.dataset.y, e.target.dataset.x, valorAccion)
+                actualizarTurno(gameBoardModule.valorPlayer1Activo());
+                gameBoardModule.valorCambioTurno();
+                gameBoardModule.llenadoMatriz(e.target.dataset.y, e.target.dataset.x, gameBoardModule.valorCambioTurno());
+                actualizarField(e.target.dataset.number, gameBoardModule.valorCambioTurno());
+                gameBoardModule.conteOport = gameBoardModule.conteOport - 1;
+                gameBoardModule.win(gameBoardModule.player1Activo)
+                actualizarPuntajes(gameBoardModule.player1GetScore(), gameBoardModule.player2GetScore());
+                gameBoardModule.cambioTurno();
+                gameBoardModule.reinicio();
+                //gameBoardModule.revisarTablero();
             }
         });
     }
+
+    //gameBoardModule.llenadoMatriz(e.target.dataset.y, e.target.dataset.x, valorAccion);
 
     //Actualizar contadores superiores
     let player1ScoreDiv = document.querySelector("#player1ScoreDiv");
@@ -214,29 +230,18 @@ const fieldModule = (function () {
         playeTurnDiv.textContent = turnoAviso;
     }
 
+    function reiniciarField() {
+        for(i = 1; i < 10; i++){
+                actualizarField(i, " ")
+            }
+    }
 
-    return {gameBoardPanelEvento, actualizarTurno, actualizarPuntajes};
+
+    return {gameBoardPanelEvento, actualizarTurno, actualizarPuntajes, reiniciarField};
 })();
 
-
-//gameBoardModule.mecanicaJuego();
-
-//gameBoardModule.mecanicaJuegoEvento();
-
-
-/*
-
-function prueba() {
-    gameBoardFieldDiv.addEventListener("click", (e) => {
-    if(e.target.className == "gameBoardPanel") {
-        //console.log(e.target.dataset.y)
-        //console.log(e.target.dataset.x)
-        console.log(e.target.dataset.number)
-        actualizarField(e.target.dataset.number, "X")
-    }
-    });
-    }
-*/
+gameBoardModule.limpiarTablero();
+fieldModule.gameBoardPanelEvento();
 
 
 
